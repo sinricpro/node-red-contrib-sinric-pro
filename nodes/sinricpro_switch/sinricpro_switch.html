@@ -1,0 +1,33 @@
+<script type="text/javascript">
+    RED.nodes.registerType('sinricpro_switch', {
+        category: 'function',
+        color: '#a6bbcf',
+        defaults: {
+            settings: { value: "", type: "settings" },
+            deviceid: { value: "", required: true },
+        },
+        inputs: 0,
+        outputs: 1,
+        icon: "plug.png",
+        label: function () {
+            return this.deviceId || "SinricPro Switch";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="sinricpro_switch">
+    <div class="form-row">
+        <label for="node-input-settings">Settings</label>
+        <input type="text" id="node-input-settings" placeholder="Settings">
+    </div>
+    <div class="form-row">
+        <label for="node-input-deviceid">Device Id</label>
+        <input type="text" id="node-input-deviceid" placeholder="Device if of the Switch">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="sinricpro_switch">
+    <p>
+        SinricPro Switch Device.
+    </p>
+</script>

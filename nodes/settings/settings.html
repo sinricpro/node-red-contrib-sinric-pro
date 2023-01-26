@@ -1,0 +1,24 @@
+<script type="text/javascript">
+    RED.nodes.registerType('settings', {
+        category: 'config',
+        defaults: {
+            appkey: { value: "appkey", required: true },
+            appsecret: { value: "appsecret", required: true },
+        },
+        label: function () {
+            return this.appkey;
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="settings">
+    <div class="form-row">
+        <label for="node-input-appkey">App Key</label>
+        <input type="text" id="node-config-input-appkey">
+    </div>
+    <div class="form-row">
+        <label for="node-input-appsecret">App Secret</label>
+        <input type="text" id="node-config-input-appsecret">
+    </div>
+
+</script>

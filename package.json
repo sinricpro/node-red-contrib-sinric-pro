@@ -1,0 +1,23 @@
+{
+	"name": "node-red-contrib-sinric-pro",
+	"version": "0.0.1",
+	"description": "Official Node-RED support for Sinric devices",
+	"dependencies": {
+		"ws": "^8.12.0"
+	},
+	"keywords": [
+		"node-red"
+	],
+	"node-red": {
+		"nodes": {
+			"settings" : "nodes/settings/settings.js",
+			"sinricpro_switch": "nodes/sinricpro_switch/sinricpro_switch.js"
+		}
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/sinricpro/node-red-contrib-sinric-pro"
+	},
+	"license": "MIT",
+	"author": "Aruna Tennakoon",
+}

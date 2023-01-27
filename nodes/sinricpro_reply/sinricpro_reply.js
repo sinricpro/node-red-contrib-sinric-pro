@@ -3,7 +3,7 @@
 const SinricProBaseNode = require("../../src/sinricpro-base-node");
 
 module.exports = (RED) => {
-    function SwitchNode(node) {
+    function SinricProReplyNode(node) {
         RED.nodes.createNode(this, node);
         
         new SinricProBaseNode({
@@ -13,5 +13,5 @@ module.exports = (RED) => {
 		});
     }
 
-    RED.nodes.registerType("sinricpro_switch", SwitchNode);
+    RED.nodes.registerType("reply", SinricProReplyNode);
 }

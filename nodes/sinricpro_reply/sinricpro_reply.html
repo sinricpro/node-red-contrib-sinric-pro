@@ -1,0 +1,47 @@
+<script type="text/javascript">
+    RED.nodes.registerType('reply', {
+        category: 'sinricpro',
+        color: '#E1F5FE',
+        defaults: {},
+        inputs: 1,
+        outputs: 0,
+        icon: "sinricpro.png",
+        label: function () {
+            return `reply`;
+        },
+        labelStyle: function () {
+            return "";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="reply">
+    <p>Send a response to a request</p>
+
+    <h3>Input</h3>
+    <dl class="message-properties">
+        <dt>replyToken <span class="property-type">string</span></dt>
+        <dd>replyToken from request</dd>
+        <dt>action <span class="property-type">string</span></dt>
+        <dd>action from request</dd>
+        <dt>value <span class="property-type">object</span></dt>
+        <dd>current status</dd>
+    </dl>
+
+    <div class="form-tips">
+        <p>
+            Input example: 
+            {
+                "replyToken": "xxx",
+                "action": "xxx",
+                "value": "xxx",
+            }
+        </p>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="reply">
+    <p>
+        Send a response to a request
+    </p>
+</script>

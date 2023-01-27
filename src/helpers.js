@@ -24,7 +24,7 @@ const resetNodeStatus = ({ status, timeout = 0 }) => {
 };
 
 module.exports = {
-    resetNodeStatus,
+  resetNodeStatus,
   nodeInfo,
   nodeError,
   nodeSuccess,

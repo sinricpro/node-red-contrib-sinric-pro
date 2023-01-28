@@ -10,7 +10,7 @@
             return `reply`;
         },
         labelStyle: function () {
-            return "";
+            return "node_label_italic";
         }
     });
 </script>
@@ -26,6 +26,10 @@
         <dd>action from request</dd>
         <dt>value <span class="property-type">object</span></dt>
         <dd>current status</dd>
+        <dt>success <span class="property-type">boolean</span></dt>
+        <dd>success or failed</dd>
+        <dt>message <span class="property-type">string</span></dt>
+        <dd>Optional. Provide a failed reason</dd>        
     </dl>
 
     <div class="form-tips">

@@ -11,7 +11,11 @@ module.exports = (RED) => {
       nodeError(node.status, "Invalid SinricPro config!", node);
       return;
     }
-   
+
+    // Set the appSecret for the flow.
+    const settings = RED.nodes.getNode(node.settings);
+    this.context().flow.set('appsecret', settings.appsecret);
+ 
     new SinricProBaseNode({
       self: this,
       node: node,
@@ -30,3 +34,5 @@ function validConfig(RED, node) {
 
   return true;
 }
+
+ 

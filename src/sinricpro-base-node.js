@@ -33,7 +33,7 @@ class SinricProBaseNode {
   hideNodeStatus(timeout) {
     return resetNodeStatus({
       status: this.self.status.bind(this.self),
-      timeout: timeout,
+      timeout: timeout
     });
   }
 
@@ -52,18 +52,6 @@ class SinricProBaseNode {
       .digest("base64");
   }
 
-  getAppSecret() {
-    let settingsNode;
-
-    this.RED.nodes.eachNode((n) => {
-      if (n.type === "settings") {
-        settingsNode = this.RED.nodes.getNode(n.id);
-      }
-    });
-
-    return settingsNode.appsecret;
-  }
-
   onInput(msg) {
     internalDebugLog("[onInput()] input: ", msg);
 
@@ -72,25 +60,19 @@ class SinricProBaseNode {
 
       const action = msg.action;
       if (!action) {
-        this.errorStatus({
-          message: "Please provide an action name in msg.action",
-        });
+        this.errorStatus({ message: "Please provide an action name in msg.action" });
         return;
       }
 
       const deviceId = msg.deviceId;
       if (!deviceId) {
-        this.errorStatus({
-          message: "Please provide an deviceId name in msg.deviceId",
-        });
+        this.errorStatus({ message: "Please provide an deviceId name in msg.deviceId" });
         return;
       }
 
       const replyToken = msg.replyToken;
       if (!replyToken) {
-        this.errorStatus({
-          message: "Please provide an replyToken in msg.replyToken",
-        });
+        this.errorStatus({ message: "Please provide an replyToken in msg.replyToken" });
         return;
       }
 
@@ -100,29 +82,38 @@ class SinricProBaseNode {
         return;
       }
 
-      const appsecret = this.getAppSecret();
-      console.log("appsecret >", appsecret);
+      const success = msg.success;
+      if (!success) {
+        this.errorStatus({ message: "Please provide an success in msg.success" });
+        return;
+      }
 
+      const message = msg.message || "OK";
+      const appsecret = this.self.context().flow.get("appsecret");
       const payload = {
         replyToken: replyToken,
+        success: success,
+        message: message,
         createdAt: this.getUnixTime(),
         deviceId: deviceId,
         type: "response",
         action: action,
-        value: value,
+        value: value
       };
-
       const HMAC = this.getSignature(JSON.stringify(payload), appsecret);
       const signature = { HMAC: HMAC };
       const header = { payloadVersion: 2, signatureVersion: 1 };
+
       const reply = {
         header: header,
         payload: payload,
-        signature: signature,
+        signature: signature
       };
 
-      //console.log("this.websocket:", this.websocket);
-      //this.websocket.send(reply);
+      internalDebugLog("[onInput()]: => " + JSON.stringify(reply));
+
+      const websocket = this.self.context().flow.get("websocket");
+      websocket.send(JSON.stringify(reply));      
     } catch (e) {
       internalDebugLog(e);
       this.errorStatus(e);
@@ -131,30 +122,26 @@ class SinricProBaseNode {
   }
 
   connectOnce(self, node) {
-    const connectionState =
-      self.context().global.get("webScoketConnectionState") || 0;
+    const connectionState = self.context().flow.get("webScoketConnectionState") || 0;
     if (connectionState != 0 || !this.settings || !this.settings.appkey) {
       return;
     }
 
-    self.context().global.set("webScoketConnectionState", 1);
+    self.context().flow.set("webScoketConnectionState", 1);
 
-    internalDebugLog(
-      "[connectOnce()]: Connecting with AppKey: ",
-      this.settings.appkey
-    );
+    internalDebugLog("[connectOnce()]: Connecting with AppKey: ", this.settings.appkey);
 
     const wsOptions = {
       headers: {
         appkey: this.settings.appkey,
-        restoredevicestates: false,
-      },
+        restoredevicestates: false
+      }
     };
 
-    let client = new ReconnectingWebSocket(API_ENDPOINT, wsOptions);
-    this.websocket = client;
+    const client = new ReconnectingWebSocket(API_ENDPOINT, wsOptions);
+    this.self.context().flow.set("websocket", client);
 
-    client.onopen = (event) => {
+    client.onopen = event => {
       node.connected = true;
       internalDebugLog("[connectOnce()]: Connected..!");
     };
@@ -164,8 +151,8 @@ class SinricProBaseNode {
       internalDebugLog("[connectOnce()]: Disconnected..!");
     };
 
-    client.onmessage = (event) => {
-      internalDebugLog("[connectOnce()]: < ", event.data);
+    client.onmessage = event => {
+      internalDebugLog("[connectOnce()]: <= ", event.data);
 
       // ignore timestamp
       const isTimeStamp = event.data.indexOf("timestamp") == 2;

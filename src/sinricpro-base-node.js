@@ -7,10 +7,11 @@ const internalDebugLog = require("debug")("sinricpro:base");
 const crypto = require("crypto");
 
 class SinricProBaseNode {
-  constructor({ self, node, RED }) {
+  constructor({ self, node, RED, nodeType }) {
     this.self = self;
     this.node = node;
     this.RED = RED;
+    this.nodeType = nodeType;
     this.settings = node.settings ? RED.nodes.getNode(node.settings) : null;
     this.self.deviceId = node.deviceid;
 
@@ -70,40 +71,58 @@ class SinricProBaseNode {
         return;
       }
 
-      const replyToken = msg.replyToken;
-      if (!replyToken) {
-        this.errorStatus({ message: "Please provide an replyToken in msg.replyToken" });
-        return;
-      }
-
       const value = msg.value;
       if (!value) {
         this.errorStatus({ message: "Please provide an value in msg.value" });
         return;
       }
 
-      const success = msg.success;
-      if (!success) {
-        this.errorStatus({ message: "Please provide an success in msg.success" });
-        return;
+      // additional validations for respose.
+      if(this.nodeType === 'replyNode') {
+        if (!msg.replyToken) {
+          this.errorStatus({ message: "Please provide an replyToken in msg.replyToken" });
+          return;
+        }
+
+        if (!msg.success) {
+          this.errorStatus({ message: "Please provide an success in msg.success" });
+          return;
+        }
       }
 
+      const success = msg.success || null;
+      const replyToken = msg.replyToken || null; 
       const message = msg.message || "OK";
       const appsecret = this.self.context().flow.get("appsecret");
-      const payload = {
-        replyToken: replyToken,
-        success: success,
-        message: message,
-        createdAt: this.getUnixTime(),
-        deviceId: deviceId,
-        type: "response",
-        action: action,
-        value: value
-      };
+      const type = this.nodeType === 'replyNode' ? "response" : "event";
+      let payload = {};
+
+      if(this.nodeType === 'replyNode') { 
+        payload = {
+          replyToken: replyToken,
+          success: success,
+          message: message,
+          createdAt: this.getUnixTime(),
+          deviceId: deviceId,
+          type: type,
+          action: action,
+          value: value
+        };
+      } else if(this.nodeType === 'eventNode') { 
+        payload = {
+          message: message,
+          cause: { type: "PHYSICAL_INTERACTION" },
+          createdAt: this.getUnixTime(),
+          deviceId: deviceId,
+          type: type,
+          action: action,
+          value: value     
+        };
+      }
+      
       const HMAC = this.getSignature(JSON.stringify(payload), appsecret);
       const signature = { HMAC: HMAC };
       const header = { payloadVersion: 2, signatureVersion: 1 };
-
       const reply = {
         header: header,
         payload: payload,
@@ -113,7 +132,7 @@ class SinricProBaseNode {
       internalDebugLog("[onInput()]: => " + JSON.stringify(reply));
 
       const websocket = this.self.context().flow.get("websocket");
-      websocket.send(JSON.stringify(reply));      
+      websocket.send(JSON.stringify(reply));
     } catch (e) {
       internalDebugLog(e);
       this.errorStatus(e);

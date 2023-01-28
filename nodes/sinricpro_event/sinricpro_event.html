@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('reply', {
+    RED.nodes.registerType('event', {
         category: 'sinricpro',
         color: '#E1F5FE',
         defaults: {},
@@ -7,7 +7,7 @@
         outputs: 0,
         icon: "sinricpro.png",
         label: function () {
-            return `reply`;
+            return `event`;
         },
         labelStyle: function () {
             return "node_label_italic";
@@ -15,31 +15,25 @@
     });
 </script>
 
-<script type="text/html" data-template-name="reply">
-    <p>Send a response to a request</p>
+<script type="text/html" data-template-name="event">
+    <p>Send an event to the server.</p>
 
     <h3>Input</h3>
     <dl class="message-properties">
-        <dt>replyToken <span class="property-type">string</span></dt>
-        <dd>replyToken from request</dd>
         <dt>action <span class="property-type">string</span></dt>
-        <dd>action from request</dd>
+        <dd>Action of the event</dd>
+        <dt>deviceId <span class="property-type">string</span></dt>
+        <dd>id of the device</dd>
         <dt>value <span class="property-type">object</span></dt>
         <dd>current status</dd>
-        <dt>success <span class="property-type">boolean</span></dt>
-        <dd>success or failed</dd>
-        <dt>message <span class="property-type">string</span></dt>
-        <dd>Optional. Provide a failed reason</dd>        
     </dl>
 
     <div class="form-tips">
         <p>
             Input example: 
             {
-                "replyToken": "6ec1f778-e92f-487c-9818-bdbe3438f30e",
-                "success": true,
                 "action": "setPowerState",
-                "message": "OK",
+                "deviceId": "5d737888aea17c30a056d759",
                 "value": {
                     "state": "On"
                 }
@@ -48,8 +42,8 @@
     </div>
 </script>
 
-<script type="text/html" data-help-name="reply">
+<script type="text/html" data-help-name="event">
     <p>
-        Send a response to a request
+        Send a event
     </p>
 </script>

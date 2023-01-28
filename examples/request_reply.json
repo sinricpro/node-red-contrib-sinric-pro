@@ -1,0 +1,58 @@
+[
+    {
+        "id": "3123c111a581da1a",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f96a571aa75f2190",
+        "type": "reply",
+        "z": "3123c111a581da1a",
+        "x": 730,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "a64073f67adc4449",
+        "type": "function",
+        "z": "3123c111a581da1a",
+        "name": "do_something",
+        "func": "msg.payload.success = true;\nmsg.payload.message = \"OK\";\nreturn msg.payload;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 240,
+        "wires": [
+            [
+                "f96a571aa75f2190"
+            ]
+        ]
+    },
+    {
+        "id": "3afe39ad764db11a",
+        "type": "device",
+        "z": "3123c111a581da1a",
+        "name": "switch2",
+        "settings": "318c4905a1cef7df",
+        "deviceid": "6380685692a0dd7d33657892",
+        "x": 360,
+        "y": 240,
+        "wires": [
+            [
+                "a64073f67adc4449"
+            ]
+        ]
+    },
+    {
+        "id": "318c4905a1cef7df",
+        "type": "settings",
+        "appkey": "928e6c99-05fe-49e2-8b9b-ebfa2bb32b74",
+        "appsecret": "debad9cc-6c33-46c4-ab0f-512938da6e5f-68e1aa04-bc69-4b03-91e3-6899331cc4bf"
+    }
+]

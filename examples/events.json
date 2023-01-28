@@ -1,0 +1,53 @@
+[
+    {
+        "id": "3123c111a581da1a",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "0121ef141cbda947",
+        "type": "event",
+        "z": "3123c111a581da1a",
+        "x": 750,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "b9962cfeca2406d9",
+        "type": "inject",
+        "z": "3123c111a581da1a",
+        "name": "",
+        "props": [
+            {
+                "p": "action",
+                "v": "setPowerState",
+                "vt": "str"
+            },
+            {
+                "p": "deviceId",
+                "v": "6380685692a0dd7d33657892",
+                "vt": "str"
+            },
+            {
+                "p": "value",
+                "v": "{                     \"state\": \"Off\"                 }",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 530,
+        "y": 300,
+        "wires": [
+            [
+                "0121ef141cbda947"
+            ]
+        ]
+    }
+]

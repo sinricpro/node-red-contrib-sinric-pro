@@ -13,6 +13,7 @@ const { nodeError, resetNodeStatus, nodeInfo } = require("./helpers");
 const internalDebugLog = require("debug")("sinricpro:base");
 const crypto = require("crypto");
 const FastRateLimit = require("fast-ratelimit").FastRateLimit;
+const moment = require('moment');
 class SinricProBaseNode {
   constructor({ self, node, RED, nodeType }) {
     this.self = self;
@@ -88,13 +89,12 @@ class SinricProBaseNode {
   }
 
   /**
-   * Generate the message HMAC signature.
+   * Generate the HMAC signature for a message.
    *
    * @param message complete message.
    * @param appsecert AppSecret from the Portal.
    * @returns Return the signature.
    */
-
   getSignature(message, appsecert) {
     return crypto
       .createHmac("sha256", appsecert)
@@ -103,7 +103,7 @@ class SinricProBaseNode {
   }
 
   /**
-   * Invoked when node recevice a message.
+   * Called when node recevice a message.
    *
    * @param msg message.
    */
@@ -202,11 +202,30 @@ class SinricProBaseNode {
     }
   }
 
+  verifySignature(data) {
+    const { payload, signature } = JSON.parse(data);
+    const appSecert = this.self.context().flow.get("appsecret");
+    const calculatedSig = this.getSignature(JSON.stringify(payload), appSecert);
+
+    if (signature.HMAC === calculatedSig) { 
+      let createdAtTs = Number(payload.createdAt) * 1000;
+      let isPayloadCreatedAtTooOld = moment().subtract(2, 'minutes').isAfter(new Date(createdAtTs));
+      
+      if (isPayloadCreatedAtTooOld) { 
+        internalDebugLog(`[verifySignature()]: timestamp is too old!`);
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      internalDebugLog(`[verifySignature()]: signature mismatch. expected: ${calculatedSig} signature: ${signature}`);
+      return false;
+    }
+  }
+
   /**
    * Connect to Sinric Pro Websocket server and listen to commands. Only one connection per flow
-   *
    */
-
   connectOnce(self, node) {
     const connectionState = self.context().flow.get("webScoketConnectionState") || 0;
     if (connectionState != 0 || !this.settings || !this.settings.appkey) {
@@ -240,17 +259,19 @@ class SinricProBaseNode {
     client.onmessage = event => {
       internalDebugLog("[connectOnce()]: <= ", event.data);
 
-      // ignore timestamp
+      // ignore initial timestamp message
       const isTimeStamp = event.data.indexOf("timestamp") == 2;
       if (isTimeStamp) return;
 
       const { payload } = JSON.parse(event.data);
-
       this.infoStatus({ message: `${payload.action}`, timeout: 1500 });
 
       if (payload.deviceId == this.self.deviceId) {
-        // TODO: verify signature.
-        self.send({ payload });
+        if(this.verifySignature(event.data)) {
+          self.send({ payload });
+        } else {
+          this.errorStatus({ message: `Message verification failed!`, timeout: 1500 });
+        }
       }
     };
   }

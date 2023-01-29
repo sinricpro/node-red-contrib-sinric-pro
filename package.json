@@ -1,5 +1,5 @@
 {
-	"name": "node-red-contrib-sinric-pro",
+	"name": "@sinricpro/node-red-contrib-sinric-pro",
 	"version": "1.1.2",
 	"description": "Official Node-RED support for Sinric devices",
 	"scripts": {
@@ -22,6 +22,7 @@
 		"alexa"
 	],
 	"node-red": {
+		"version": ">=2.0.0",
 		"nodes": {
 			"settings": "nodes/settings/settings.js",
 			"sinricpro_device": "nodes/sinricpro_device/sinricpro_device.js",

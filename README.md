@@ -11,5 +11,5 @@ or
 
 ```bash
 $ cd ~/.node-red
-$ npm install @node-red-contrib-sinric-pro
+$ npm install node-red-contrib-sinricpro
 ```

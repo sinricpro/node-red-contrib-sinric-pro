@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('reply', {
+    RED.nodes.registerType('response', {
         category: 'sinricpro',
         color: '#E1F5FE',
         defaults: {},
@@ -7,7 +7,7 @@
         outputs: 0,
         icon: "sinricpro.png",
         label: function () {
-            return `reply`;
+            return `response`;
         },
         labelStyle: function () {
             return "node_label_italic";
@@ -15,8 +15,8 @@
     });
 </script>
 
-<script type="text/html" data-template-name="reply">
-    <p>Send a response to a request</p>
+<script type="text/html" data-template-name="response">
+    <p>Send a response to a request from server</p>
 
     <h3>Input</h3>
     <dl class="message-properties">
@@ -48,7 +48,7 @@
     </div>
 </script>
 
-<script type="text/html" data-help-name="reply">
+<script type="text/html" data-help-name="response">
     <p>
         Send a response to a request
     </p>

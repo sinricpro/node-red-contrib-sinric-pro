@@ -10,16 +10,16 @@
 const SinricProBaseNode = require("../../src/sinricpro-base-node");
 
 module.exports = (RED) => {
-  function SinricProReplyNode(node) {
+  function SinricProResponseNode(node) {
     RED.nodes.createNode(this, node);
 
     new SinricProBaseNode({
       self: this,
       node: node,
       RED: RED,
-      nodeType: 'replyNode'
+      nodeType: 'responseNode'
     });
   }
 
-  RED.nodes.registerType("reply", SinricProReplyNode);
+  RED.nodes.registerType("response", SinricProResponseNode);
 };

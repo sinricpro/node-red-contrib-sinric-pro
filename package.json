@@ -26,7 +26,7 @@
 		"nodes": {
 			"settings": "nodes/settings/settings.js",
 			"sinricpro_device": "nodes/sinricpro_device/sinricpro_device.js",
-			"sinricpro_reply": "nodes/sinricpro_reply/sinricpro_reply.js",
+			"sinricpro_response": "nodes/sinricpro_response/sinricpro_response.js",
 			"sinricpro_event": "nodes/sinricpro_event/sinricpro_event.js"
 		}
 	},

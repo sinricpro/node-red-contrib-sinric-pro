@@ -130,7 +130,7 @@ class SinricProBaseNode {
       }
 
       // additional validations for respose.
-      if (this.nodeType === "replyNode") {
+      if (this.nodeType === "responseNode") {
         if (!msg.replyToken) {
           this.errorStatus({ message: "Please provide an replyToken in msg.replyToken" });
           return;
@@ -155,10 +155,10 @@ class SinricProBaseNode {
       const replyToken = msg.replyToken || null;
       const message = msg.message || "OK";
       const appsecret = this.self.context().flow.get("appsecret");
-      const type = this.nodeType === "replyNode" ? "response" : "event";
+      const type = this.nodeType === "responseNode" ? "response" : "event";
       let payload = {};
 
-      if (this.nodeType === "replyNode") {
+      if (this.nodeType === "responseNode") {
         payload = {
           replyToken: replyToken,
           success: success,

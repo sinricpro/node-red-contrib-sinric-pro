@@ -4,7 +4,7 @@
         color: '#E1F5FE',
         defaults: {
             name: { value: "", required: true },
-            settings: { value: "", type: "settings" },
+            appcredential: { value: "", type: "appcredential" },
             deviceid: { value: "", required: true },
         },
         inputs: 0,
@@ -21,8 +21,8 @@
 
 <script type="text/html" data-template-name="device">
     <div class="form-row">
-        <label for="node-input-settings">Settings</label>
-        <input type="text" id="node-input-settings" placeholder="Settings">
+        <label for="node-input-appcredential">App Credential</label>
+        <input type="text" id="node-input-appcredential" placeholder="App Credential">
     </div>
     <div class="form-row">
         <label for="node-input-name">Name</label>

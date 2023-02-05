@@ -14,14 +14,14 @@ module.exports = (RED) => {
   function SinricProDeviceNode(node) {
     RED.nodes.createNode(this, node);
 
-    if (!node.settings || !node.deviceid || !validConfig(RED, node)) {
+    if (!node.appcredential || !node.deviceid || !validConfig(RED, node)) {
       nodeError(node.status, "Invalid SinricPro config!", node);
       return;
     }
 
     // Set the appSecret for the flow.
-    const settings = RED.nodes.getNode(node.settings);
-    this.context().flow.set('appsecret', settings.appsecret);
+    const appcredential = RED.nodes.getNode(node.appcredential);
+    this.context().flow.set('appsecret', appcredential.appsecret);
  
     new SinricProBaseNode({
       self: this,
@@ -34,8 +34,8 @@ module.exports = (RED) => {
 };
 
 function validConfig(RED, node) {
-  let settings = RED.nodes.getNode(node.settings);
-  if (!settings.appkey || !settings.appsecret) {
+  let appcredential = RED.nodes.getNode(node.appcredential);
+  if (!appcredential.appkey || !appcredential.appsecret) {
     return false;
   }
 

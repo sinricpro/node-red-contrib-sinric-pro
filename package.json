@@ -1,6 +1,6 @@
 {
 	"name": "@sinricpro/node-red-contrib-sinric-pro",
-	"version": "1.2.1",
+	"version": "1.3.1",
 	"description": "Official Node-RED support for Sinric devices",
 	"scripts": {
 		"debug": "DEBUG=sinricpro:* node-red"
@@ -24,7 +24,7 @@
 	"node-red": {
 		"version": ">=2.0.0",
 		"nodes": {
-			"settings": "nodes/settings/settings.js",
+			"appcredential": "nodes/app_credential/app_credential.js",
 			"sinricpro_device": "nodes/sinricpro_device/sinricpro_device.js",
 			"sinricpro_response": "nodes/sinricpro_response/sinricpro_response.js",
 			"sinricpro_event": "nodes/sinricpro_event/sinricpro_event.js"

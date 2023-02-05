@@ -14,13 +14,15 @@ const internalDebugLog = require("debug")("sinricpro:base");
 const crypto = require("crypto");
 const FastRateLimit = require("fast-ratelimit").FastRateLimit;
 const moment = require('moment');
+const pjson = require('./../package.json');
+
 class SinricProBaseNode {
   constructor({ self, node, RED, nodeType }) {
     this.self = self;
     this.node = node;
     this.RED = RED;
     this.nodeType = nodeType;
-    this.settings = node.settings ? RED.nodes.getNode(node.settings) : null;
+    this.appcredential = node.appcredential ? RED.nodes.getNode(node.appcredential) : null;
     this.self.deviceId = node.deviceid;
     this.self.on("close", this.onClose.bind(this));
     this.self.on("input", this.onInput.bind(this));
@@ -228,18 +230,20 @@ class SinricProBaseNode {
    */
   connectOnce(self, node) {
     const connectionState = self.context().flow.get("webScoketConnectionState") || 0;
-    if (connectionState != 0 || !this.settings || !this.settings.appkey) {
+    if (connectionState != 0 || !this.appcredential || !this.appcredential.appkey) {
       return;
     }
 
     self.context().flow.set("webScoketConnectionState", 1);
 
-    internalDebugLog("[connectOnce()]: Connecting with AppKey: ", this.settings.appkey);
+    internalDebugLog("[connectOnce()]: Connecting with AppKey: ", this.appcredential.appkey);
 
     const wsOptions = {
       headers: {
-        appkey: this.settings.appkey,
-        restoredevicestates: false
+        appkey: this.appcredential.appkey,
+        restoredevicestates: false,
+        platform: 'node-red',
+        sdkversion: pjson.version
       }
     };
 
@@ -268,6 +272,7 @@ class SinricProBaseNode {
 
       if (payload.deviceId == this.self.deviceId) {
         if(this.verifySignature(event.data)) {
+          internalDebugLog("[connectOnce()]: =>", event.data);
           self.send({ payload });
         } else {
           this.errorStatus({ message: `Message verification failed!`, timeout: 1500 });

@@ -39,7 +39,7 @@
         "type": "device",
         "z": "3123c111a581da1a",
         "name": "switch2",
-        "settings": "318c4905a1cef7df",
+        "appcredential": "318c4905a1cef7df",
         "deviceid": "6380685692a0dd7d33657892",
         "x": 360,
         "y": 240,
@@ -51,7 +51,7 @@
     },
     {
         "id": "318c4905a1cef7df",
-        "type": "settings",
+        "type": "appcredential",
         "appkey": "928e6c99-05fe-49e2-8b9b-ebfa2bb32b74",
         "appsecret": "debad9cc-6c33-46c4-ab0f-512938da6e5f-68e1aa04-bc69-4b03-91e3-6899331cc4bf"
     }

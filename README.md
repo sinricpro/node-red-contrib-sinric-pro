@@ -9,7 +9,10 @@ Select Manage palette, select Install, type node-red-contrib-sinric-pro and clic
 
 ## Dependencies.
 
-1. Git. Make sure Git command line tools are installed.
+
+``
+Make sure Git command line tools are installed.
+``
 
 or
 

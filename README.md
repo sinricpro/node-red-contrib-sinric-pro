@@ -6,7 +6,7 @@ Tutorial: https://help.sinric.pro/pages/node-red
 
 ## Installation
 
-Select Manage palette, select Install, type node-red-contrib-sinric-pro and click the install button. After installation is complete a new set of nodes shoud appear under sinricpro category
+Select Manage palette, select Install, type `node-red-contrib-sinric-pro` and click the install button. After installation is complete a new set of nodes shoud appear under sinricpro category
 
 ## Dependencies.
 

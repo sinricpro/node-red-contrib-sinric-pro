@@ -15,6 +15,7 @@ const crypto = require("crypto");
 const FastRateLimit = require("fast-ratelimit").FastRateLimit;
 const moment = require('moment');
 const pjson = require('./../package.json');
+const flowDeviceMap = new Map();
 
 class SinricProBaseNode {
   constructor({ self, node, RED, nodeType }) {
@@ -45,9 +46,10 @@ class SinricProBaseNode {
    * @param message message.
    * @param timeout message visible duration.
    */
-  infoStatus({ message, timeout }) {
-    nodeInfo({ status: this.self.status.bind(this.self), message });
-    if (timeout) this.hideNodeStatus(timeout);
+  infoStatus({ message, timeout, node }) {
+    const nodeHost = node ?? this.self;
+    nodeInfo({ status: nodeHost.status.bind(nodeHost), message });
+    if (timeout) this.hideNodeStatus(timeout, node);
   }
 
   /**
@@ -56,8 +58,9 @@ class SinricProBaseNode {
    * @param message message.
    * @param timeout message visible duration.
    */
-  errorStatus({ message, timeout }) {
-    nodeError({ status: this.self.status.bind(this.self), message });
+  errorStatus({ message, timeout, node }) {
+    const nodeHost = node ?? this.self;
+    nodeError({ status: nodeHost.status.bind(nodeHost), message });
     if (timeout) this.hideNodeStatus(timeout);
   }
 
@@ -67,9 +70,10 @@ class SinricProBaseNode {
    * @param message message.
    * @param timeout message visible duration.
    */
-  hideNodeStatus(timeout) {
+  hideNodeStatus(timeout, target) {
+    const nodeHost = target ?? this.self;
     return resetNodeStatus({
-      status: this.self.status.bind(this.self),
+      status: nodeHost.status.bind(nodeHost),
       timeout: timeout
     });
   }
@@ -229,8 +233,14 @@ class SinricProBaseNode {
    * Connect to Sinric Pro Websocket server and listen to commands. Only one connection per flow
    */
   connectOnce(self, node) {
+    if (!this.appcredential || !this.appcredential.appkey) {
+      return;
+    }
+
+    flowDeviceMap.set(this.self.deviceId, this.self);
+    
     const connectionState = self.context().flow.get("webScoketConnectionState") || 0;
-    if (connectionState != 0 || !this.appcredential || !this.appcredential.appkey) {
+    if (connectionState != 0) {
       return;
     }
 
@@ -261,22 +271,30 @@ class SinricProBaseNode {
     };
 
     client.onmessage = event => {
-      internalDebugLog("[connectOnce()]: <= ", event.data);
+      internalDebugLog("[onmessage()]: <= ", event.data);
 
       // ignore initial timestamp message
       const isTimeStamp = event.data.indexOf("timestamp") == 2;
-      if (isTimeStamp) return;
+      if (isTimeStamp) {
+        internalDebugLog("[onmessage()]: Got timestamp..!");
+        return;
+      }
 
       const { payload } = JSON.parse(event.data);
-      this.infoStatus({ message: `${payload.action}`, timeout: 1500 });
+      
+      if(flowDeviceMap.has(payload.deviceId)) {
+        const targetNode = flowDeviceMap.get(payload.deviceId);
 
-      if (payload.deviceId == this.self.deviceId) {
         if(this.verifySignature(event.data)) {
-          internalDebugLog("[connectOnce()]: =>", event.data);
-          self.send({ payload });
+          internalDebugLog("[onmessage()]: Forwarding to node with device id: %s", targetNode.deviceId);
+          targetNode.send({ payload });
+          this.infoStatus({ message: `${payload.action}`, timeout: 1500, node: targetNode });     
         } else {
-          this.errorStatus({ message: `Message verification failed!`, timeout: 1500 });
+          this.errorStatus({ message: `Message verification failed!`, timeout: 1500, node: targetNode });
         }
+      } else {
+        this.errorStatus({ message: `Device id: ${payload.deviceId} not found!`, timeout: 1500 });
+        internalDebugLog("[onmessage()]: deviceId: %s not in flowDeviceMap..!", payload.deviceId);
       }
     };
   }

@@ -6,7 +6,7 @@
  */
 
 "use strict";
-
+const internalDebugLog = require("debug")("sinricpro:deviceNode");
 const SinricProBaseNode = require("../../src/sinricpro-base-node");
 const { nodeError } = require("../../src/helpers");
 
@@ -18,6 +18,8 @@ module.exports = (RED) => {
       nodeError(node.status, "Invalid SinricPro config!", node);
       return;
     }
+
+    internalDebugLog("Init node id: %s name:", node.deviceid, node.name);
 
     // Set the appSecret for the flow.
     const appcredential = RED.nodes.getNode(node.appcredential);

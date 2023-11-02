@@ -1,5 +1,10 @@
 ## Version History
 
+#### 1.4.1 (2023-10-02)
+
+- fix: https://github.com/sinricpro/node-red-contrib-sinric-pro/issues/4
+- fix: shows notifications on wrong node.
+
 #### 1.3.1 (2023-02-05)
 
 - platform and version websocket headers added.

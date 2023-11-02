@@ -2,6 +2,7 @@
 
 This module provides a set of nodes in Node-RED for Sinric Pro. With this plugin you can receive Amazon Alexa, Google Home or SmartThings commands in Node-RED
 
+Tutorial: https://help.sinric.pro/pages/node-red
 
 ## Installation
 

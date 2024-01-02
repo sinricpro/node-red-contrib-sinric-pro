@@ -1,6 +1,6 @@
 {
 	"name": "@sinricpro/node-red-contrib-sinric-pro",
-	"version": "1.4.1",
+	"version": "1.5.1",
 	"description": "Official Node-RED support for Sinric devices",
 	"scripts": {
 		"debug": "DEBUG=sinricpro:* node-red"

@@ -1,5 +1,9 @@
 ## Version History
 
+#### 1.5.1 (2024-01-02)
+
+- fix: https://github.com/sinricpro/node-red-contrib-sinric-pro/issues/6
+
 #### 1.4.1 (2023-10-02)
 
 - fix: https://github.com/sinricpro/node-red-contrib-sinric-pro/issues/4

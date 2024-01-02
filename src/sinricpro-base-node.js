@@ -171,6 +171,7 @@ class SinricProBaseNode {
           message: message,
           createdAt: this.getUnixTime(),
           deviceId: deviceId,
+          clientId: 'node-red',
           type: type,
           action: action,
           value: value
@@ -181,6 +182,7 @@ class SinricProBaseNode {
           cause: { type: "PHYSICAL_INTERACTION" },
           createdAt: this.getUnixTime(),
           deviceId: deviceId,
+          clientId: 'node-red',
           type: type,
           action: action,
           value: value

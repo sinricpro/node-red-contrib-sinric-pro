@@ -162,16 +162,19 @@ class SinricProBaseNode {
       const message = msg.message || "OK";
       const appsecret = this.self.context().flow.get("appsecret");
       const type = this.nodeType === "responseNode" ? "response" : "event";
+      
       let payload = {};
 
       if (this.nodeType === "responseNode") {
+        const clientId = this.self.context().flow.get("request-client-id") ?? 'node-red';
+
         payload = {
           replyToken: replyToken,
           success: success,
           message: message,
           createdAt: this.getUnixTime(),
           deviceId: deviceId,
-          clientId: 'node-red',
+          clientId: clientId,
           type: type,
           action: action,
           value: value
@@ -286,6 +289,7 @@ class SinricProBaseNode {
       
       if(flowDeviceMap.has(payload.deviceId)) {
         const targetNode = flowDeviceMap.get(payload.deviceId);
+        this.self.context().flow.set("request-client-id", payload.clientId);
 
         if(this.verifySignature(event.data)) {
           internalDebugLog("[onmessage()]: Forwarding to node with device id: %s", targetNode.deviceId);
